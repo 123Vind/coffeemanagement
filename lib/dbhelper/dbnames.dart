@@ -9,5 +9,4 @@ static const dborderbox = 'coffeeorders';
 //box key or attribute names
 static const dbitemsboxlist = 'coffeeitemslist';
 static const dborderboxlist = 'coffeeorderlist';
-
 }

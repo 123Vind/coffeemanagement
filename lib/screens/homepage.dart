@@ -1,13 +1,16 @@
 import 'package:coffeemanagement/dbhelper/dbhelper.dart';
-import 'package:coffeemanagement/dbhelper/dbmodels.dart';
 import 'package:coffeemanagement/dbhelper/dbnames.dart';
+import 'package:coffeemanagement/screens/editmenuscreen.dart';
+import 'package:coffeemanagement/screens/receiptscreen.dart';
+import 'package:coffeemanagement/widgets/appdrawer.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
-
+  static const routename = 'homescreen';
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -16,19 +19,20 @@ class _HomePageState extends State<HomePage> {
 late Box box;
 late Box box2;
 DbHelper helper = DbHelper();
+
  @override
   void initState() {
     if(Hive.box(DbNames.dbname)==null){
         print('no database');
+        //print(helper.orderlist.length.toString);
         helper.initialadd();
     }
     else{
-      helper.initialadd();
+     
+
+      // print(helper.orderlist.length.toString);
       print('database already created');
     }
-
-
-
     super.initState();
   }
  void onsave(List items,List orders){
@@ -46,38 +50,95 @@ DbHelper helper = DbHelper();
 
     print(s);
  }
+
   @override
   Widget build(BuildContext context) {
     // List items = box.get(DbNames.dbitemsbox);
     // List orders = box.get(DbNames.dborderbox);
     final dbhelperProvider = Provider.of<DbHelper>(context);
     final itemlists = Provider.of<DbHelper>(context).itemlist;
-    print(dbhelperProvider.itemlist.length.toString());
+    final catlist = Provider.of<DbHelper>(context).categoriess;
+
+
     return Scaffold(
       appBar:AppBar(title:const Text('Home Page'),
       actions: [
         IconButton(onPressed: (){
-          dbhelperProvider.additems(ItemDbModel(id: 'coffee22345', itemname: 'americano', category: 'coffee', price: 60.00));
-        }, icon: Icon(Icons.add))
-      ],
-      
-      ),
+          Navigator.of(context).pushNamed(EditMenuScreen.routename);
+        }, icon: Icon(Icons.add)),
+      ],),
 
-      body: Center(
-        child: Column(
-          children: [
-            Expanded(child: GridView.builder(
-              itemCount: dbhelperProvider.itemlist.length,
-              itemBuilder: (context, index) => CoffeeCards(index: index,),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 1,
-                childAspectRatio: 1.3/1.5
-              ),
-            ),)
-          ],
-        ),
+      body: Column(
+        children: [
+          Container(
+            height: 80,
+            padding: EdgeInsets.all(16),
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+                itemBuilder:(context,i)=> InkWell(
+                  onTap: (){
+                      dbhelperProvider.changeindex(i);
+                  },
+                  child: Container(
+                  padding: const EdgeInsets.all(16),
+                  margin: EdgeInsets.only(right: 8),
+                  decoration: BoxDecoration(
+                    color: i == dbhelperProvider.indexes?Colors.amber:Colors.grey,
+                    borderRadius: BorderRadius.circular(8)
+                  ),
+                  child: Text(catlist[i]),
+                              ),
+                ),itemCount: catlist.length),
+            ),
+          Expanded(child: GridView.builder(
+            itemCount: dbhelperProvider.itemlist.length,
+            itemBuilder: (context, index) => CoffeeCards(index: index,),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 1,
+              childAspectRatio: 1.3/2
+            ),
+          ),),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 30),
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.only(topLeft: Radius.circular(8),topRight: Radius.circular(8),),
+              color: Colors.grey[200]
+            ),
+            child: Column(
+              children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Total:',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+                        Text('Rs. ${dbhelperProvider.addamount}',style: const TextStyle(fontSize: 20,fontWeight: FontWeight.bold),)
+                      ],
+                      
+
+                    ),
+                    const SizedBox(height: 10,),
+                    ElevatedButton(onPressed: (){
+                          double d = dbhelperProvider.addamount;
+                          if(d>0){
+                              Navigator.of(context).pushNamed(ReceiptScreen.routename);
+                          }else{
+                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('NO ITEM ADDED'),duration: Duration(milliseconds: 1000),));
+                          }
+
+                    }, child: const Padding(
+                      padding:  EdgeInsets.all(8.0),
+                      child: Text('Print Receipt'),
+                     
+                    ),),
+              ],
+
+
+            ),
+          ),
+        ],
       ),
+      drawer: AppDrawer(),
     );
   }
 }
@@ -94,8 +155,8 @@ class CoffeeCards extends StatelessWidget {
     return Container(
       height: 300,
       width: double.infinity,
-      padding: EdgeInsets.all(16),
-      margin: EdgeInsets.symmetric(horizontal: 16,vertical: 8),
+      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.symmetric(horizontal: 16,vertical: 8),
       decoration: BoxDecoration(
         color: Colors.grey[200],
         borderRadius: BorderRadius.circular(12)
@@ -123,10 +184,8 @@ class CoffeeCards extends StatelessWidget {
             children: [
               addbutton(icon: Icons.add,butfunc: (){
                 int s = item['quantity'];
-                print('button click');
-
+                //print('button click');
                 s++;
-               
                 dbhelpers.changequantity(index,s);
               },),
               Text('${item['quantity']}',style: TextStyle(fontSize: 20),),

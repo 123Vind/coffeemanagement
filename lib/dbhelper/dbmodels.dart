@@ -19,7 +19,7 @@ ItemDbModel({
 
 class OrderDbModel{
 String orderId;
-List<ItemDbModel> items;
+List items;
 String time;
 
 OrderDbModel({

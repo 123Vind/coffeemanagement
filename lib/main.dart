@@ -1,8 +1,15 @@
+import 'dart:async';
+
 import 'package:coffeemanagement/dbhelper/dbhelper.dart';
 import 'package:coffeemanagement/dbhelper/dbnames.dart';
+import 'package:coffeemanagement/screens/editmenuscreen.dart';
+import 'package:coffeemanagement/screens/editscreen.dart';
+import 'package:coffeemanagement/screens/orderScreen.dart';
+import 'package:coffeemanagement/screens/receiptscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
+
 
 import 'screens/homepage.dart';
 
@@ -29,22 +36,56 @@ class MyApp extends StatelessWidget {
       ,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
+        title: 'Coffee Shop',
         theme: ThemeData(
-          // This is the theme of your application.
-          //
-          // Try running your application with "flutter run". You'll see the
-          // application has a blue toolbar. Then, without quitting the app, try
-          // changing the primarySwatch below to Colors.green and then invoke
-          // "hot reload" (press "r" in the console where you ran "flutter run",
-          // or simply save your changes to "hot reload" in a Flutter IDE).
-          // Notice that the counter didn't reset back to zero; the application
-          // is not restarted.
+
+  
           primaryColor: Colors.white,
-          primarySwatch: Colors.amber,
+          primarySwatch: Colors.lightBlue,
         ),
-        home: HomePage(),
+        home: SplashScreen(),
+        routes: {
+          HomePage.routename:(context) => const HomePage(),
+          ReceiptScreen.routename:(context) =>ReceiptScreen(),
+          OrderScreen.routename:(context) =>OrderScreen(),
+          EditScreen.routename:(context) =>EditScreen(),
+          EditMenuScreen.routename:(context) =>EditScreen(),
+        },
       ),
     );
+  }
+}
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({Key? key}) : super(key: key);
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  Timer(Duration(seconds: 3),
+          ()=>Navigator.pushReplacement(context,
+                                        MaterialPageRoute(builder:
+                                                          (context) => 
+                                                          HomePage()
+                                                         )
+                                       )
+         );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(height: double.infinity,
+      width: double.infinity,
+      color: Colors.white,
+      child: Center(child:Text('splash')),
+      ),
+    );
+ 
   }
 }
