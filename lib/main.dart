@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
-
 import 'screens/homepage.dart';
 
 late Box box;
@@ -23,8 +22,28 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+
+  @override
+  void initState() {
+    Box box = Hive.box(DbNames.dbname);
+    if(box.get(DbNames.dbitemsbox)==null){
+      print('null datas');
+      DbHelper().initialadd();
+     // DbHelper().initialadd();
+    }
+    // TODO: implement initState
+    super.initState();
+  
+  }
 
   // This widget is the root of your application.
   @override
@@ -39,9 +58,9 @@ class MyApp extends StatelessWidget {
         title: 'Coffee Shop',
         theme: ThemeData(
 
-  
+          fontFamily: 'Poppins',
           primaryColor: Colors.white,
-          primarySwatch: Colors.lightBlue,
+          primarySwatch: Colors.brown,
         ),
         home: HomePage(),
         routes: {
@@ -49,7 +68,7 @@ class MyApp extends StatelessWidget {
           ReceiptScreen.routename:(context) =>ReceiptScreen(),
           OrderScreen.routename:(context) =>OrderScreen(),
           EditScreen.routename:(context) =>EditScreen(),
-          EditMenuScreen.routename:(context) =>EditScreen(),
+          EditMenuScreen.routename:(context) =>EditMenuScreen(),
         },
       ),
     );

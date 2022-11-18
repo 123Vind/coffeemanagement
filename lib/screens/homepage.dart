@@ -1,3 +1,5 @@
+
+
 import 'package:coffeemanagement/dbhelper/dbhelper.dart';
 import 'package:coffeemanagement/dbhelper/dbnames.dart';
 import 'package:coffeemanagement/screens/editmenuscreen.dart';
@@ -61,7 +63,8 @@ DbHelper helper = DbHelper();
 
 
     return Scaffold(
-      appBar:AppBar(title:const Text('Home Page'),
+      appBar:AppBar(title:const Text('Coffee Shop'),
+      elevation: 0,
       actions: [
         IconButton(onPressed: (){
           Navigator.of(context).pushNamed(EditMenuScreen.routename);
@@ -118,19 +121,22 @@ DbHelper helper = DbHelper();
 
                     ),
                     const SizedBox(height: 10,),
-                    ElevatedButton(onPressed: (){
-                          double d = dbhelperProvider.addamount;
-                          if(d>0){
-                              Navigator.of(context).pushNamed(ReceiptScreen.routename);
-                          }else{
-                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('NO ITEM ADDED'),duration: Duration(milliseconds: 1000),));
-                          }
+                    Container(
+                      width: double.infinity,
+                      child: ElevatedButton(onPressed: (){
+                            double d = dbhelperProvider.addamount;
+                            if(d>0){
+                                Navigator.of(context).pushNamed(ReceiptScreen.routename);
+                            }else{
+                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('NO ITEM ADDED'),duration: Duration(milliseconds: 1000),));
+                            }
 
-                    }, child: const Padding(
-                      padding:  EdgeInsets.all(8.0),
-                      child: Text('Print Receipt'),
-                     
-                    ),),
+                      }, child: const Padding(
+                        padding:  EdgeInsets.all(16.0),
+                        child: Text('Print Receipt'),
+                       
+                      ),),
+                    ),
               ],
 
 
@@ -159,8 +165,12 @@ class CoffeeCards extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16,vertical: 8),
       decoration: BoxDecoration(
         color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(12)
-      
+        borderRadius: BorderRadius.circular(12),
+        gradient:LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Colors.grey.withOpacity(0.3),Colors.brown.withOpacity(0.3)]
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
