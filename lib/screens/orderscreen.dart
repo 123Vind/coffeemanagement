@@ -1,6 +1,8 @@
 import 'package:coffeemanagement/dbhelper/dbhelper.dart';
+import 'package:coffeemanagement/dbhelper/dbnames.dart';
 import 'package:coffeemanagement/screens/receiptscreen.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
 import 'package:provider/provider.dart';
 
@@ -17,9 +19,17 @@ class OrderScreen extends StatefulWidget {
 
 class _OrderScreenState extends State<OrderScreen> {
   DbHelper dbHelper = DbHelper();
+  Box box = Hive.box(DbNames.dbname2);
+  bool orderlistcheck = false;
     @override
   void initState() {
-    dbHelper.getListorders();
+    //dbHelper.getListorders();
+    if(box.get(DbNames.dborderbox)==null){
+      print('no orders data');
+    }
+    else{
+      orderlistcheck = true;
+    }
   
     // TODO: implement initState
     super.initState();
@@ -29,14 +39,21 @@ class _OrderScreenState extends State<OrderScreen> {
   @override
   Widget build(BuildContext context) {
     final dbHelper = Provider.of<DbHelper>(context);
-    List s = dbHelper.orderlist;
+    List s = [];
+    if(orderlistcheck){
+      s = dbHelper.orderlist;
+    }
     return Scaffold(
         appBar: AppBar(
           title: const Text('Order History'),
         ),
-        body:s.isEmpty?Center(child: Text('No orders yet\n khara haana yollugo'),):ListView.builder(itemBuilder:(context,index)=> OrderContainer(i:index,item:s[index]),
-        itemCount: s.length,
-        ),
+        body:orderlistcheck?ListView.builder(itemCount: s.length,itemBuilder:(context,index)=> OrderContainer(i:index,item:s[index])):Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [Text('No orders yet',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+          Text('khara haana yollugo chatlo',style: TextStyle(fontSize: 16),)
+          ],),
+        ) 
 
     );
   }
@@ -50,12 +67,24 @@ class OrderContainer extends StatelessWidget {
   }) : super(key: key);
   final int i;
   final Map item;
+
+  List<String> getphonetime(){
+    List<String> s = [];
+    String text = item['id'];
+    if(text.isNotEmpty){
+      s = text.split('#');
+    }
+    
+    
+    return s;
+  }
+
   @override
   Widget build(BuildContext context) {
     List d = item['items'];
     double amount = DbHelper().getAmountsorders(d);
     return Container( 
-     
+
         margin: const EdgeInsets.all(16),
           padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 24),
           decoration: BoxDecoration(
@@ -66,9 +95,14 @@ class OrderContainer extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
             children: [
                  const SizedBox(height: 5,),
-                 Text('${item['time']}',style: TextStyle(fontSize: 16),),
+                 Text(getphonetime()[0],style: TextStyle(fontSize: 16),),
                   const SizedBox(height: 5,),
-                 Text('${item['id']}',style: TextStyle(fontSize: 16),),
+                 Row(
+                   children: [
+                     Icon(Icons.phone,size: 20,color: Colors.grey[700],),
+                     Text(getphonetime()[1],style: TextStyle(fontSize: 16),),
+                   ],
+                 ),
 
                  const SizedBox(height: 15,),
                  Container(

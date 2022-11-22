@@ -13,8 +13,8 @@ class ReceiptScreen extends StatefulWidget {
 
 class _ReceiptScreenState extends State<ReceiptScreen> {
   bool checkprogress = false;
-
-
+  final _form = GlobalKey<FormState>();
+  final _phonecontroller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final dbprovider = Provider.of<DbHelper>(context);
@@ -27,7 +27,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
           color: Colors.white,
           backgroundColor: Colors.grey,
         ): Container(
-      
+
           width: double.infinity,
           margin: EdgeInsets.all(20),
           padding: EdgeInsets.all(8),
@@ -42,6 +42,30 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
               Text('Receipt',style: TextStyle(fontSize: 16)),
               SizedBox(height: 10,),
               Text('${date}'),
+             Form(
+               key: _form,
+               child: Padding(
+                 padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 16),
+                 child: TextFormField(
+                    controller: _phonecontroller,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.phone),
+                      labelText:'Phone',
+             
+                    ),
+                  keyboardType: TextInputType.phone,
+                  validator: (v){
+                    if(v!.isEmpty){
+              
+                      return 'Please provide a number';
+                      
+                    
+                    }
+                  },
+                  ),
+               ),
+             ),
               Expanded(child: ListView(
                 children:dbprovider.getreceipt.map((e) => ReceiptCard(item: e,)).toList() ,
               )),
@@ -50,7 +74,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                 padding: EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
-                  color: Colors.green
+                  color: Colors.brown[200]
                 ),
                 child: Column(
                   children: [
@@ -76,10 +100,17 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                   if(checkprogress){
                         checkprogress = false;
                   }else{
-                    checkprogress = true;
-                     dbprovider.addorders(OrderDbModel(orderId: '${DateTime.now()}cofeee', time: '${DateTime.now()}', items: dbprovider.getreceipt));
-                      dbprovider.clearitems();
-                      Navigator.of(context).pop();
+                        if(_form.currentState!.validate()){
+                        checkprogress = true;
+                        dbprovider.addorders(OrderDbModel(orderId: '${DateTime.now()}#${_phonecontroller.text}', time: '${DateTime.now()}', items: dbprovider.getreceipt));
+                        dbprovider.clearitems();
+                        Navigator.of(context).pop();
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Items added'),duration: Duration(milliseconds: 1000),));
+                        }
+                        else{
+                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Invalid Phone number'),duration: Duration(milliseconds: 1000),));
+                        }
+             
                   
                   }
                     checkprogress = false;
@@ -92,7 +123,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    color: Colors.black
+                    color: Colors.brown[900]
                   ),
                   child:Center(child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,

@@ -97,25 +97,32 @@ class EditCard extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                const Text('Delete this Item'),
+                                const Text('Delete this Item',style: TextStyle(fontSize: 20)),
                                 const SizedBox(height: 10,),
-                                Text(itemslist[index]['name']),
-                                Text('${itemslist[index]['category']}'),
-                                const SizedBox(height: 10,),
+                                Text(itemslist[index]['name'],style: TextStyle(fontSize: 16),),
+                                 const SizedBox(height: 10,),
+                                Text('${itemslist[index]['category']}',style: TextStyle(fontSize: 16),),
+                                const SizedBox(height: 40,),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     ElevatedButton(onPressed: (){
                                       Navigator.of(context).pop();
-                                    }, child:const Text('Cancel')),
+                                    }, child:Padding(
+                                      padding: const EdgeInsets.all(16),
+                                      child: const Text('Cancel'),
+                                    )),
                                     const SizedBox(height: 10,width: 10,),
                                     ElevatedButton(onPressed: (){
                                     dbhelper.deleteItems(index);
                                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Item Deleted'),duration: Duration(milliseconds: 1000),));  
                                     Navigator.of(context).pop();
 
-                                    }, child:const Text('Delete'),),
+                                    }, child:Padding(
+                                      padding: const EdgeInsets.all(16),
+                                      child: const Text('Delete'),
+                                    ),),
                                   ],
                                 )
                               ],

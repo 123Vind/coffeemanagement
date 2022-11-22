@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:coffeemanagement/dbhelper/dbhelper.dart';
 import 'package:coffeemanagement/dbhelper/dbmodels.dart';
+import 'package:coffeemanagement/screens/editscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -107,7 +108,7 @@ var categorycontroller = TextEditingController();
                                     itemprovider.updateitemdb( ItemDbModel(id: '${DateTime.now()}${namecontroller.text}', itemname: namecontroller.text, category: categorycontroller.text, price: double.parse(pricecontroller.text)), index);
                                   }
                          
-                                  
+                                 Navigator.pop(context);
                                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Item Added'),duration: Duration(milliseconds: 2000),));
                                 }
                          

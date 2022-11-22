@@ -20,105 +20,111 @@ void changeindex(int i){
   index  = i;
   notifyListeners();
 }
+bool checkitemlist(){
+  return itemlist.isEmpty;
+}
 
- List<String> catlist = ['all'];
-List ordercopy = [{
-  'time':'20/11/2022',
-  'id':'gjdke',
-  'items':[
-      {
-   'id':'o1coffee',
-    'category':'beverages',
-    'name':'coffee',
-    'price':60,
-    'quantity':1,
-},
-  {
-   'id':'o1coffe2',
-    'category':'beverages',
-    'name':'coffee22',
-    'price':70,
-    'quantity':2,
-},
-],
-},
-{
-  'time':'21/11/2022',
-  'id':'gjdkeere',
-  'items':[
-      {
-   'id':'o1coffee',
-    'category':'beverages',
-    'name':'coffee',
-    'price':60,
-    'quantity':2,
-},
-  {
-   'id':'o1coffe2',
-    'category':'beverages',
-    'name':'coffee22',
-    'price':70,
-    'quantity':2,
-},
-],
-},
+bool checkorderlist(){
+  return orderlist.isEmpty;
+}
+ List<String> catlist = ['All items'];
+// List ordercopy = [{
+//   'time':'20/11/2022',
+//   'id':'gjdke',
+//   'items':[
+//       {
+//    'id':'o1coffee',
+//     'category':'beverages',
+//     'name':'coffee',
+//     'price':60,
+//     'quantity':1,
+// },
+//   {
+//    'id':'o1coffe2',
+//     'category':'beverages',
+//     'name':'coffee22',
+//     'price':70,
+//     'quantity':2,
+// },
+// ],
+// },
+// {
+//   'time':'21/11/2022',
+//   'id':'gjdkeere',
+//   'items':[
+//       {
+//    'id':'o1coffee',
+//     'category':'beverages',
+//     'name':'coffee',
+//     'price':60,
+//     'quantity':2,
+// },
+//   {
+//    'id':'o1coffe2',
+//     'category':'beverages',
+//     'name':'coffee22',
+//     'price':70,
+//     'quantity':2,
+// },
+// ],
+// },
 
 
-];
+// ];
 
-List itemcopy = [
-  {
-   'id':'o1coffee',
-    'category':'beverages',
-    'name':'coffee',
-    'price':60,
-    'quantity':0,
-},
-  {
-'id':'o2coffee',
-    'category':'beverages',
-    'name':'coffee yo',
-    'price':60,
-    'quantity':0,
-},
-  {
-'id':'o3coffee',
-    'category':'beverages',
-    'name':'coffee white',
-    'price':60,
-    'quantity':0,
-},
-  {
-'id':'o4coffee',
-    'category':'beverages',
-    'name':'coffeeblack',
-    'price':60,
-    'quantity':0,
-},
+// List itemcopy = [
+//   {
+//    'id':'o1coffee',
+//     'category':'beverages',
+//     'name':'coffee',
+//     'price':60,
+//     'quantity':0,
+// },
+//   {
+// 'id':'o2coffee',
+//     'category':'beverages',
+//     'name':'coffee yo',
+//     'price':60,
+//     'quantity':0,
+// },
+//   {
+// 'id':'o3coffee',
+//     'category':'beverages',
+//     'name':'coffee white',
+//     'price':60,
+//     'quantity':0,
+// },
+//   {
+// 'id':'o4coffee',
+//     'category':'beverages',
+//     'name':'coffeeblack',
+//     'price':60,
+//     'quantity':0,
+// },
 
-];
+// ];
 
 
 
 List get itemlist{
 
-  updateitems();
+ updateitems();
 
   return[...items];
 }
 
 
-void getListorders(){
-  try{
-    List s =orderbox.get(DbNames.dborderbox);
-    print(s);
-  }
-  catch(e){
-    initialaddorders();
-      print('error getting data ${e}');
-  }
+// void getListorders(){
+//   try{
+//     List s =orderbox.get(DbNames.dborderbox);
+//     print(s);
+//   }
+//   catch(e){
+//     initialaddorders();
+//       print('error getting data ${e}');
+//   }
 
-}
+// }
 
 
 List get orderlist{
@@ -130,15 +136,15 @@ List get orderlist{
 List get getreceipt{
   return itemlist.where((element) => element['quantity']>0).toList();
 }
-void initialadd(){
-    itembox.put(DbNames.dbitemsbox, itemcopy);
-    updateitems();
-    notifyListeners();
-}
+// void initialadd(){
+//     itembox.put(DbNames.dbitemsbox, itemcopy);
+//     updateitems();
+//     notifyListeners();
+// }
 
-void initialaddorders(){
-    orderbox.put(DbNames.dborderbox, ordercopy);   
-}
+// void initialaddorders(){
+//     orderbox.put(DbNames.dborderbox, ordercopy);   
+// }
 
 void changequantity(int index,int quantity){
   // print('change $quantity');
@@ -300,7 +306,13 @@ void addorders(OrderDbModel ordermodel){
 
 
 void updateitems(){
+  try{
 items = itembox.get(DbNames.dbitemsbox);
+  }
+  catch(e){
+   print('empty database or errors');
+  }
+
 
 }
 

@@ -3,6 +3,7 @@
 import 'package:coffeemanagement/dbhelper/dbhelper.dart';
 import 'package:coffeemanagement/dbhelper/dbnames.dart';
 import 'package:coffeemanagement/screens/editmenuscreen.dart';
+import 'package:coffeemanagement/screens/noitemscreen.dart';
 import 'package:coffeemanagement/screens/receiptscreen.dart';
 import 'package:coffeemanagement/widgets/appdrawer.dart';
 import 'package:flutter/material.dart';
@@ -27,11 +28,9 @@ DbHelper helper = DbHelper();
     if(Hive.box(DbNames.dbname)==null){
         print('no database');
         //print(helper.orderlist.length.toString);
-        helper.initialadd();
+        //helper.initialadd();
     }
     else{
-     
-
       // print(helper.orderlist.length.toString);
       print('database already created');
     }
@@ -71,7 +70,7 @@ DbHelper helper = DbHelper();
         }, icon: Icon(Icons.add)),
       ],),
 
-      body: Column(
+      body:Column(
         children: [
           Container(
             height: 80,
@@ -83,13 +82,14 @@ DbHelper helper = DbHelper();
                       dbhelperProvider.changeindex(i);
                   },
                   child: Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.symmetric(vertical:10,horizontal: 16),
                   margin: EdgeInsets.only(right: 8),
+                  alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: i == dbhelperProvider.indexes?Colors.amber:Colors.grey,
-                    borderRadius: BorderRadius.circular(8)
+                    color: i == dbhelperProvider.indexes?Colors.brown:Colors.grey,
+                    borderRadius: BorderRadius.circular(16)
                   ),
-                  child: Text(catlist[i]),
+                  child: Text(catlist[i],style: TextStyle(color: Colors.white),),
                               ),
                 ),itemCount: catlist.length),
             ),
@@ -99,7 +99,7 @@ DbHelper helper = DbHelper();
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 1,
-              childAspectRatio: 1.3/2
+              childAspectRatio: 1.2/1.8
             ),
           ),),
           Container(
@@ -169,7 +169,7 @@ class CoffeeCards extends StatelessWidget {
         gradient:LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Colors.grey.withOpacity(0.3),Colors.brown.withOpacity(0.3)]
+          colors: [Colors.red.withOpacity(0.3),Colors.brown.withOpacity(0.3)]
         ),
       ),
       child: Column(
@@ -178,11 +178,15 @@ class CoffeeCards extends StatelessWidget {
           Container(
             height: 100,
             width: 100,
+            padding: EdgeInsets.all(18),
              decoration: BoxDecoration(
-        color: Colors.black,
-        borderRadius: BorderRadius.circular(12)
-      
-      ),
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                
+              
+              ),
+              clipBehavior: Clip.antiAlias,
+              child: Image.asset('assets/logos.png',fit: BoxFit.cover,),
           ),
           const SizedBox(height: 10,),
           Text('${item['name']}',style: const TextStyle(fontSize:20,fontWeight: FontWeight.bold)),
